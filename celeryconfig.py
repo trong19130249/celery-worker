@@ -2,8 +2,8 @@
 # http://docs.celeryproject.org/en/latest/configuration.html
 import os
 
-# from dotenv import load_dotenv
-# load_dotenv()
+from dotenv import load_dotenv
+load_dotenv()
 
 
 CELERY_IMPORTS =('core.tasks.tasks',)
