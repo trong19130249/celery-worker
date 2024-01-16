@@ -33,3 +33,8 @@ services:
       - ./:/usr/src/app/
     env_file:
       - ./docker.env
+    network_mode: host
+    tty: true
+    depends_on:
+      - rabbitmq
+      - redis
