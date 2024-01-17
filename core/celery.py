@@ -40,4 +40,9 @@ app.conf.beat_schedule = {
         'schedule':5,
         'args': (message_data,),
     },
+    'broadcast-scan-network-every-60-seconds': {
+        'task': 'core.tasks.tasks.broadcast_scan_network_task',
+        # 5s for testing
+        'schedule':60,
+    },
 }

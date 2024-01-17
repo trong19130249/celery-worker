@@ -8,6 +8,7 @@ import struct
 import json
 import time
 
+from core.tasks.neighbourhood import scan_neighbourhood
 from core.ultils import get_ipv4_address
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -24,7 +25,6 @@ sock.bind((MULTICAST_GROUP, MULTICAST_PORT))
 def send_notification_task(message):
     message["synchronizedTimeMs"] = str(int(time.time() * 1000))
     message = json.dumps(message)
-    print("trang " + message)
 
     sock.sendto(message.encode(), (MULTICAST_GROUP, MULTICAST_PORT))
     # channel_layer = get_channel_layer()
@@ -38,6 +38,12 @@ def send_notification_task(message):
     # )
     # gửi lên broadcast group notifications
 
+
+@shared_task
+def broadcast_scan_network_task():
+    results = scan_neighbourhood()
+    sock.sendto(json.dumps(results).encode(), (MULTICAST_GROUP, MULTICAST_PORT))
+    return results
 
 @app.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
