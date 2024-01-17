@@ -1,5 +1,6 @@
 from celery import shared_task
 
+from celeryconfig import MULTICAST_GROUP, MULTICAST_PORT, IP_V4
 # from celeryconfig import MULTICAST_GROUP, MULTICAST_PORT
 from core.celery import app
 import socket
@@ -10,14 +11,12 @@ import time
 from core.ultils import get_ipv4_address
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-MULTICAST_GROUP = '239.255.11.11'
-MULTICAST_PORT = 7001
 
 group = socket.inet_aton(MULTICAST_GROUP)
 mreq = struct.pack('4sL', group, socket.INADDR_ANY)
 sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP,
-                socket.inet_aton(MULTICAST_GROUP) + socket.inet_aton(get_ipv4_address()))
+                socket.inet_aton(MULTICAST_GROUP) + socket.inet_aton(IP_V4))
 sock.bind((MULTICAST_GROUP, MULTICAST_PORT))
 
 

@@ -1,13 +1,15 @@
 from celery import Celery
 import os
 
+from celeryconfig import IP_V4
+
 # from core.tasks.neighbourhood import get_ipv4_address
 
 app = Celery('core')
 app.config_from_object('celeryconfig', namespace='CELERY')
 app.autodiscover_tasks()
-# remoteAddresses = []
-# remoteAddresses.append(get_ipv4_address())
+remoteAddresses = []
+remoteAddresses.append(IP_V4)
 message_data = {
     "brand":"metavms",
     "cloudHost":"meta.nxvms.com",
@@ -21,7 +23,7 @@ message_data = {
     "port":7002,
     "protoVersion":5107,
     "realm":"VMS",
-    "remoteAddresses":["fe80::d8e:d343:e71c:c234%3","d2baacef-78c7-09d0-3c92-ff83a813dc41.82161a01-8f82-4c72-b680-eb1d10464a71","192.168.103.78","172.19.0.3"],
+    "remoteAddresses":remoteAddresses,
     "runtimeId":"{0e1b6e03-35b5-420d-8f3e-419925ae1d3f}",
     "serverFlags":"SF_HasPublicIP|SF_SupportsTranscoding",
     "sslAllowed":True,
