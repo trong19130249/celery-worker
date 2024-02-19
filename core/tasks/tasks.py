@@ -15,17 +15,17 @@ sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
 group = socket.inet_aton(MULTICAST_GROUP)
 mreq = struct.pack('4sL', group, socket.INADDR_ANY)
-sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP,
-                socket.inet_aton(MULTICAST_GROUP) + socket.inet_aton(IP_V4))
-sock.bind((MULTICAST_GROUP, MULTICAST_PORT))
+# sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+# sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP,
+#                 socket.inet_aton(MULTICAST_GROUP) + socket.inet_aton(IP_V4))
+# sock.bind((MULTICAST_GROUP, MULTICAST_PORT))
+sock.setsockopt(socket.IPPROTO_IP, socket.IP_ADD_MEMBERSHIP, mreq)
 
 
 @shared_task
 def send_notification_task(message):
     message["synchronizedTimeMs"] = str(int(time.time() * 1000))
     message = json.dumps(message)
-
     sock.sendto(message.encode(), (MULTICAST_GROUP, MULTICAST_PORT))
     # channel_layer = get_channel_layer()
     #  print log ra terminal logger
@@ -37,6 +37,7 @@ def send_notification_task(message):
     #     }
     # )
     # gửi lên broadcast group notifications
+    return message
 
 
 @shared_task
